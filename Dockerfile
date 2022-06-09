@@ -44,22 +44,13 @@ RUN apk add --no-cache  \
 
 RUN rm -rf /var/lib/apt/lists/*
 
-#WORKDIR /tmp
-#RUN wget https://github.com/grpc/grpc/archive/refs/heads/master.tar.gz
-#RUN tar -xzf master.tar.gz && rm master.tar.gz
-#RUN cd grpc-master
-#RUN git submodule update --init --recursive
-#WORKDIR /tmp/grpc-master/src/php/ext/grpc
-#RUN phpize
-#RUN ./configure
-#RUN make -j 16
-#RUN make install
-
 WORKDIR /tmp
-RUN git clone https://github.com/grpc/grpc.git .
+RUN git clone https://github.com/grpc/grpc.git
+
 WORKDIR /tmp/grpc
 RUN git submodule update --init
-RUN cd src/php/ext/grpc
+
+WORKDIR /tmp/grpc/src/php/ext/grpc
 RUN phpize
 RUN ./configure
 RUN make -j 16
