@@ -30,8 +30,7 @@ RUN apk add --no-cache  \
 
 RUN apk add --no-cache  \
         freetype-dev autoconf g++  \
-        imagemagick-dev imagemagick  \
-        libtool libmcrypt-dev libpng-dev libjpeg-turbo-dev libxml2-dev \
+        libmcrypt-dev libxml2-dev \
         icu-dev \
         libxslt-dev \
         gnu-libiconv \
@@ -59,14 +58,7 @@ RUN docker-php-ext-install \
         bcmath \
         sockets
 
-RUN pecl install -o -f \
-        redis \
-        imagick \
-        &&  rm -rf /tmp/pear
-
 RUN docker-php-ext-enable \
-        redis \
-        imagick \
         protobuf \
         grpc
 
