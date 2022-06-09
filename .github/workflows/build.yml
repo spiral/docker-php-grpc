@@ -42,7 +42,7 @@ jobs:
             ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:${{ steps.previoustag.outputs.tag }}
 
       - name: Build and push with xdebug
-        id: docker_build
+        id: docker_build_xdebug
         uses: docker/build-push-action@v2
         with:
           context: ./
