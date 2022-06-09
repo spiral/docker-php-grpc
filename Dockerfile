@@ -46,7 +46,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 ARG PROTOBUF_VERSION="3.21.1"
 RUN pecl channel-update pecl.php.net \
-    && MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc \
+    && MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc
 
 RUN docker-php-ext-install \
         opcache \
