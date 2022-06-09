@@ -1,6 +1,6 @@
 ARG PHP_IMAGE=8.1.3-cli-alpine3.15
 
-FROM php:$PHP_IMAGE
+FROM --platform=${TARGETPLATFORM:-linux/amd64} php:$PHP_IMAGE as builder
 
 # Basic libs
 RUN apk update
@@ -44,17 +44,9 @@ RUN apk add --no-cache  \
 
 RUN rm -rf /var/lib/apt/lists/*
 
-WORKDIR /tmp
-RUN git clone https://github.com/grpc/grpc.git
-
-WORKDIR /tmp/grpc
-RUN git submodule update --init
-
-WORKDIR /tmp/grpc/src/php/ext/grpc
-RUN phpize
-RUN ./configure
-RUN make -j 16
-RUN make install
+ARG PROTOBUF_VERSION="3.21.1"
+RUN pecl channel-update pecl.php.net \
+    && MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc \
 
 RUN docker-php-ext-install \
         opcache \
@@ -75,6 +67,7 @@ RUN pecl install -o -f \
 RUN docker-php-ext-enable \
         redis \
         imagick \
+        protobuf \
         grpc
 
 ARG XDEBUG_ENABLED=false
