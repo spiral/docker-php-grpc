@@ -36,7 +36,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:latest
             ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:${{ steps.previoustag.outputs.tag }}
@@ -48,7 +48,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           build-args:
             XDEBUG_ENABLED=true
           tags: |
