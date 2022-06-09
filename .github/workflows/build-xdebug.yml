@@ -39,4 +39,4 @@ jobs:
           build-args:
             XDEBUG_ENABLED=true
           tags:
-            ${{ secrets.DOCKER_HUB_USERNAME }}/php81-grpc:${{ steps.previoustag.outputs.tag }}-xdebug
+            ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:${{ steps.previoustag.outputs.tag }}-xdebug
