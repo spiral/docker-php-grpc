@@ -7,17 +7,10 @@ on:
 
 jobs:
   build-release:
-    if: "!github.event.release.prerelease"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        with:
-          fallback: v0.1
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -29,28 +22,69 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build and push
-        id: docker_build
+      - name: Build and push PHP with gRPC
+        id: docker_build_latest
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=cli-alpine
           tags: |
-            ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:latest
-            ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:${{ steps.previoustag.outputs.tag }}
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:latest
 
-      - name: Build and push with xdebug
-        id: docker_build_xdebug
+      - name: Build and push PHP 8.1 with gRPC
+        id: docker_build_81
         uses: docker/build-push-action@v2
         with:
           context: ./
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
-          build-args:
+          build-args: |
+            PHP_IMAGE=8.1.3-cli-alpine3.15
+          tags: |
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.1
+
+      - name: Build and push PHP 8.1 with gRPC and xdebug
+        id: docker_build_81_xdebug
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=8.1.3-cli-alpine3.15
             XDEBUG_ENABLED=true
           tags: |
-            ${{ secrets.DOCKER_HUB_ORG }}/php81-grpc:${{ steps.previoustag.outputs.tag }}-xdebug
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.1-xdebug
 
+      - name: Build and push PHP 8.2 with gRPC
+        id: docker_build_82
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=8.2.3-cli-alpine3.17
+          tags: |
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.2
+
+      - name: Build and push PHP 8.2 with gRPC and xdebug
+        id: docker_build_82_xdebug
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=8.2.3-cli-alpine3.17
+            XDEBUG_ENABLED=true
+          tags: |
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.2-xdebug
