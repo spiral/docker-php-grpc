@@ -1,0 +1,64 @@
+on:
+  push:
+    branches:
+      - 'ghcr'
+
+name: Build PHP 8.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_LOGIN }}
+          password: ${{ secrets.GHCR_PASSWORD }}
+
+      - name: Build and push PHP 8.1
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            PHP_IMAGE=8.1-cli-alpine3.19
+          tags: |
+            ghcr.io/spiral/php-grpc:8.1
+
+  build_xdebug:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_LOGIN }}
+          password: ${{ secrets.GHCR_PASSWORD }}
+
+      - name: Build and push PHP 8.1 with Xdebug
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            PHP_IMAGE=8.1-cli-alpine3.19
+            XDEBUG_ENABLED=true
+          tags: |
+            ghcr.io/spiral/php-grpc:8.1
