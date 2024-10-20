@@ -88,3 +88,30 @@ jobs:
             XDEBUG_ENABLED=true
           tags: |
             ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.2-xdebug
+
+      - name: Build and push PHP 8.3 with gRPC
+        id: docker_build_83
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=8.3.12-cli-alpine3.19
+          tags: |
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.3
+
+      - name: Build and push PHP 8.3 with gRPC and xdebug
+        id: docker_build_83_xdebug
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            PHP_IMAGE=8.3.12-cli-alpine3.19
+            XDEBUG_ENABLED=true
+          tags: |
+            ${{ secrets.DOCKER_HUB_ORG }}/php-grpc:8.3-xdebug
