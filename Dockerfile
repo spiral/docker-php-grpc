@@ -1,14 +1,10 @@
-ARG COMPOSER_VERSION="2.8.4"
 ARG PHP_IMAGE=8.1-cli-alpine3.19
 
-FROM composer:${COMPOSER_VERSION} AS composer_stage
 FROM --platform=${TARGETPLATFORM:-linux/amd64} php:${PHP_IMAGE}
 
 ENV TZ="UTC"
-ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY --from=ghcr.io/mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/install-php-extensions
-COPY --from=composer_stage /usr/bin/composer /usr/bin/composer
 
 ARG XDEBUG_ENABLED=false
 ARG PROTOBUF_VERSION="4.29.1"
